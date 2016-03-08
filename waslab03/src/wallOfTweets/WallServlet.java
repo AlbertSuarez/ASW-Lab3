@@ -80,8 +80,16 @@ public class WallServlet extends HttpServlet {
 	// Implements DELETE http://localhost:8080/waslab03/tweets/:id
 	public void doDelete(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException, ServletException {
+		
+		String uri = req.getRequestURI();
+		int lastIndex = uri.lastIndexOf("/");
+		if (lastIndex > -1) {
+			long id = Long.valueOf(uri.substring(lastIndex+1,uri.length()));		
+			boolean borrat = Database.deleteTweet(id);
+			if (!borrat) throw new ServletException("No sha esborrat de la Base de Dades.");
+		}
+		else  throw new ServletException("No sha esborrat de la Base de Dades.");
 
-		throw new ServletException("DELETE not yet implemented");
 	}
 
 }
