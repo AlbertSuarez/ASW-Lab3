@@ -63,10 +63,9 @@ function getTweets() {
 	req.onreadystatechange = function() {
 		if (req.readyState == 4 && req.status == 200) {
 			var tweet_list = req.responseText;
-			/*
-* TASK #2 -->
-			*/
-			document.getElementById("tweet_list").innerHTML = tweet_list;
+			var array = JSON.parse(tweet_list);
+			for (var i = 0; array.length; i++)
+				document.getElementById("tweet_list").innerHTML += getTweetHTML(array[i], "like");
 		};
 	};
 	req.send(null); 
