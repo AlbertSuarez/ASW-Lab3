@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.repackaged.org.json.JSONArray;
 import com.google.appengine.repackaged.org.json.JSONException;
 import com.google.appengine.repackaged.org.json.JSONObject;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 
 
@@ -68,6 +69,8 @@ public class WallServlet extends HttpServlet {
 				String text = tweet.getString("text");
 				Tweet tweetIn = Database.insertTweet(author, text);
 				JSONObject tweetInJSON = new JSONObject(tweetIn);
+				String hashID = Base64.encode(tweetIn.getId().toString().getBytes());
+				tweetInJSON.append("token",hashID);
 				resp.getWriter().println(tweetInJSON.toString());
 			} catch (JSONException e) {
 				e.printStackTrace();

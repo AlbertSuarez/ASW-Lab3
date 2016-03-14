@@ -87,7 +87,10 @@ function tweetHandler() {
 	req.onreadystatechange = function() {
 		if (req.readyState == 4 && req.status == 200) {
 			var anterior = document.getElementById("tweet_list").innerHTML;
-			document.getElementById("tweet_list").innerHTML = getTweetHTML(JSON.parse(req.responseText), "delete") + anterior;
+			var json = JSON.parse(req.responseText);
+			localStorage.setItem("id", json.id);
+			localStorage.setItem("token", json.token);
+			document.getElementById("tweet_list").innerHTML = getTweetHTML(json, "delete") + anterior;
 		}
 	};
 	req.setRequestHeader("Content-Type","application/json");
