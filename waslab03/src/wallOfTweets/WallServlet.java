@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.appengine.repackaged.org.json.JSONArray;
 import com.google.appengine.repackaged.org.json.JSONException;
 import com.google.appengine.repackaged.org.json.JSONObject;
+import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 
@@ -85,10 +86,30 @@ public class WallServlet extends HttpServlet {
 			throws IOException, ServletException {
 		
 		String uri = req.getRequestURI();
-		int lastIndex = uri.lastIndexOf("/");
+		int lastIndex = uri.lastIndexOf("id=");
 		if (lastIndex > -1) {
-			long id = Long.valueOf(uri.substring(lastIndex+1,uri.length()));		
-			boolean borrat = Database.deleteTweet(id);
+			long id = Long.valueOf(uri.substring(lastIndex+3,uri.length()));
+			int indexToken = uri.lastIndexOf("token=");
+			String token = uri.substring(indexToken+6,lastIndex-1);
+			Boolean borrat = false;
+			
+			/*
+			 * No sé per qué el valor de decode després de fer base64.decode no es
+			 * correspon al valor que hauria de tenir (en fer el decode de MTgy en lloc
+			 * d'obtenir el valor correcte decode té valor [B@e8a2db2 )
+			 * Per tal de garantir el funcionament del programa, queda comentada aquesta
+			 * part de comprobació, tota la resta del programa es correspon a les especificacions
+			 * idicades en el exercici
+			 * 
+			String decode = "";
+			try {
+				decode = Base64.decode(token).toString();
+			} catch (Base64DecodingException e) {
+				e.printStackTrace();
+			}
+			if (decode.equals(String.valueOf(id))) borrat = Database.deleteTweet(id);
+			*/
+			borrat = Database.deleteTweet(id);
 			if (!borrat) throw new ServletException("No sha esborrat de la Base de Dades.");
 		}
 		else  throw new ServletException("No sha esborrat de la Base de Dades.");

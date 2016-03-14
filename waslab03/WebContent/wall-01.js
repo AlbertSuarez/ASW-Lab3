@@ -45,11 +45,13 @@ function likeHandler(tweetID) {
 function deleteHandler(tweetID) {
 
 	req = new XMLHttpRequest();
-	req.open('DELETE', tweetsURI+ "/" + tweetID, true);
+	var token = localStorage.getItem(tweetID);
+	req.open('DELETE', tweetsURI+ "/token=" + token + "&id=" + tweetID, true);
 	req.onreadystatechange = function() {
 		if (req.readyState == 4 && req.status == 200) {
 			var element = document.getElementById("tweet_"+tweetID);
 			element.parentNode.removeChild(element);
+			localStorage.removeItem(tweetID);
 		}
 	};
 	req.send(/*no params*/null);
